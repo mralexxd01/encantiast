@@ -1,0 +1,233 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassCard from '../components/GlassCard.astro';
+
+// Estructura de datos organizada por sectores
+const sectores = [
+	{
+		nombre: "👑 1. Sector de Alta Dirección (Executive)",
+		roles: [
+			{ titulo: "Coop • ꧁《Co-Owner》꧂", uso: "Co-propietario del proyecto. Tiene el poder absoluto en el servidor (permiso de Administrador). Toma decisiones financieras, legales y estratégicas junto al Owner principal." },
+			{ titulo: "꧁⚜️《Studio Director》꧂ ⚜️", uso: "El director ejecutivo del estudio. Su trabajo es coordinar que todos los sectores (Devs, Mods, Artistas) trabajen en armonía y cumplan los plazos. Administra el personal del Staff." }
+		]
+	},
+	{
+		nombre: "💻 2. Sector de Desarrollo y Tecnología",
+		roles: [
+			{ titulo: "Lead Dev • 《Web & Tools》", uso: "Encargado de las bases de datos, hosting, la página web principal y las herramientas internas que usa el equipo." },
+			{ titulo: "🎮 ꧁《Game Dev Lead》꧂", uso: "Director de la programación de los videojuegos o modalidades. Coordina las mecánicas, físicas y el código principal del juego." },
+			{ titulo: "🕹️ Roblox • 《Lead》", uso: "Responsable específico del desarrollo y gestión del proyecto dentro de la plataforma Roblox (Roblox Studio, scripts en Luau, etc.)." },
+			{ titulo: "🌐 《Web • UI Lead》", uso: "Diseñador y programador de la interfaz de usuario de la web. Se asegura de que la página sea bonita, intuitiva y fácil de usar." }
+		]
+	},
+	{
+		nombre: "🗺️ 3. Sector de Construcción y Contenido Creativo",
+		roles: [
+			{ titulo: "⛏️ Build Director《MC》", uso: "Diseñador principal y jefe de constructores en Minecraft. Se encarga de la estética de los mapas, spawns y terrenos del juego." },
+			{ titulo: "🎨 Artist • Encantia", uso: "Creador del arte visual (logos, texturas de Minecraft, iconos de Roblox, banners para redes sociales o emojis del servidor)." }
+		]
+	},
+	{
+		nombre: "📣 4. Sector de Eventos y Producción",
+		roles: [
+			{ titulo: "📣 《Events • Producer》", uso: "El \"cerebro\" de los eventos. Diseña las dinámicas, las reglas de los torneos, los premios y coordina los horarios de las actividades." },
+			{ titulo: "📣 《Event Announcer》", uso: "El portavoz. Tiene permisos para usar @everyone o @here para promocionar los eventos, hacer streamings o publicar los ganadores en los canales de anuncios." }
+		]
+	},
+	{
+		nombre: "🛡️ 5. Sector de Moderación y Soporte",
+		roles: [
+			{ titulo: "🛡️ ꧁《Head Mod》꧂", uso: "Líder del equipo de moderación. Resuelve los reportes más graves, gestiona las apelaciones de baneo y evalúa el rendimiento de los moderadores." },
+			{ titulo: "⚔️ 《Sr. Moderator》", uso: "Moderador veterano. Tiene permisos avanzados como banear, expulsar (kick) y mover usuarios de canales de voz. Guía a los mods nuevos." },
+			{ titulo: "🛡 《Moderator》", uso: "Moderador estándar. Su uso es patrullar los canales de texto y voz, borrar mensajes ofensivos y mutear temporalmente a infractores en el chat." },
+			{ titulo: "🔰 Trial Mod", uso: "Moderador en fase de prueba. Solo tiene permisos básicos (como borrar mensajes o reportar directamente al Staff alto) mientras se evalúa si es apto para el puesto." }
+		]
+	},
+	{
+		nombre: "🤖 6. Sector Técnico de Bots",
+		roles: [
+			{ titulo: "🤖 《Bot Wrangler》", uso: "El técnico de soporte de los bots. Es el humano encargado de configurar los comandos, sistemas de tickets, autoroles y verificar que los bots no se caigan." },
+			{ titulo: "🔹 【Encantia-BOT】", uso: "Rol exclusivo para el bot principal del servidor. Le otorga los permisos necesarios para automatizar la moderación, dar la bienvenida o gestionar juegos internos." }
+		]
+	},
+	{
+		nombre: "👥 7. Sector de Comunidad y Usuarios",
+		roles: [
+			{ titulo: "⭐ ꧁Trusted•Ally꧂", uso: "Para creadores de contenido (streamers/youtubers) asociados, inversores o miembros muy cercanos al estudio que merecen un reconocimiento visual alto en el chat." },
+			{ titulo: "🏅 Veteran • Contributor", uso: "Para usuarios que llevan mucho tiempo en la comunidad o que han apoyado económicamente (donadores/boosters). Puede incluir acceso a un canal VIP." },
+			{ titulo: "🟢 Member", uso: "El rol general del servidor. Se le otorga automáticamente a los usuarios tras pasar las reglas o verificarse. Permite chatear y entrar a canales de voz comunes." },
+			{ titulo: "✨ Newcomer", uso: "Para los recién llegados. Sirve como medida de seguridad (anti-raid): los usuarios con este rol no pueden enviar enlaces ni imágenes hasta pasar un tiempo o verificarse." }
+		]
+	},
+	{
+		nombre: "🚫 8. Sector de Sanciones",
+		roles: [
+			{ titulo: "🔕 《Muted》・ᐧ", uso: "Rol de castigo. Cuando un moderador lo asigna, el usuario pierde automáticamente el permiso de escribir en los canales de texto y de hablar en los canales de voz." }
+		]
+	}
+];
+---
+
+<Layout title="Rangos de Discord | Encantia Studios">
+	<main class="roles-container">
+		<header class="section-header">
+			<span class="badge">Estructura Interna</span>
+			<h1>Rangos de <span class="accent">Discord</span></h1>
+			<p class="subtitle">Guía oficial y organigrama del ecosistema de roles de nuestro servidor de comunidad.</p>
+		</header>
+
+		<!-- Listado de Sectores -->
+		<div class="sectores-wrapper">
+			{sectores.map((sector) => (
+				<div class="sector-block sector-animate">
+					<h2 class="sector-title">{sector.nombre}</h2>
+					
+					<div class="roles-grid">
+						{sector.roles.map((rol) => (
+							<GlassCard>
+								<div class="rol-card-content">
+									<div class="rol-header">
+										<span class="rol-tag">{rol.titulo}</span>
+									</div>
+									<p class="rol-uso">{rol.uso}</p>
+								</div>
+							</GlassCard>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.roles-container {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: 40px 24px;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 60px;
+	}
+
+	.badge {
+		display: inline-block;
+		background: rgba(168, 85, 247, 0.1);
+		border: 1px solid rgba(168, 85, 247, 0.25);
+		color: #c084fc;
+		padding: 6px 16px;
+		border-radius: 99px;
+		font-size: 10px;
+		letter-spacing: 0.2em;
+		margin-bottom: 16px;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		font-size: 48px;
+		font-weight: 300;
+		letter-spacing: -0.01em;
+		color: #ffffff;
+		margin-bottom: 12px;
+	}
+
+	h1 .accent {
+		background: linear-gradient(to right, #ffffff, #a855f7);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.subtitle {
+		color: var(--text-muted);
+		font-size: 16px;
+		font-weight: 300;
+		max-width: 500px;
+		margin: 0 auto;
+		line-height: 1.5;
+	}
+
+	/* Contenedores de bloques */
+	.sectores-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 48px;
+	}
+
+	.sector-block {
+		opacity: 0; /* Animado mediante JS */
+	}
+
+	.sector-title {
+		font-size: 18px;
+		font-weight: 500;
+		color: #e4e4e7;
+		letter-spacing: 0.02em;
+		margin-bottom: 20px;
+		padding-left: 8px;
+		border-left: 2px solid #a855f7;
+	}
+
+	/* Rejilla de Roles por sector */
+	.roles-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+		gap: 16px;
+	}
+
+	.rol-card-content {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.rol-header {
+		display: flex;
+		align-items: center;
+	}
+
+	/* Estilo simulando las etiquetas de roles de Discord en modo Premium */
+	.rol-tag {
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		color: #ffffff;
+		font-family: monospace;
+		font-size: 13px;
+		padding: 6px 14px;
+		border-radius: 6px;
+		font-weight: 400;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+	}
+
+	.rol-uso {
+		font-size: 13.5px;
+		color: var(--text-muted);
+		line-height: 1.6;
+		font-weight: 300;
+	}
+
+	/* Ajustes Móvil */
+	@media (max-width: 768px) {
+		.roles-grid {
+			grid-template-columns: 1fr;
+		}
+		h1 { font-size: 36px; }
+		.sector-title { font-size: 16px; }
+	}
+</style>
+
+<script>
+	import { animate, stagger } from "motion";
+
+	function animarSectores() {
+		animate(".sector-animate", { opacity: [0, 1], y: [25, 0] }, { 
+			delay: stagger(0.12, { start: 0.1 }), 
+			duration: 0.7,
+			easing: "ease-out"
+		});
+	}
+
+	animarSectores();
+	document.addEventListener("astro:after-swap", animarSectores);
+</script>
