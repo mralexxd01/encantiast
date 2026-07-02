@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    /* Fondo con rejilla sutil de diseño técnico/premium */
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+/* Animación sutil flotante para los destellos de fondo */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -60px) scale(1.2); }
+}
+
+.animate-glow-1 {
+  animation: float 12s infinite ease-in-out;
+}
+.animate-glow-2 {
+  animation: float 18s infinite ease-in-out reverse;
+}

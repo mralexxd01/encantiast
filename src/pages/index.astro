@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Encantia Studios | Inicio">
+	<main class="hero-container">
+		<div class="badge">✦ ESTUDIO DIGITAL ✦</div>
+		
+		<h1 id="hero-title">
+			Desarrollo web y <br/>
+			<span class="gradient-text">experiencias gaming</span>
+		</h1>
+		
+		<p id="hero-desc">
+			En Encantia Studios nos enfocamos en la creación de proyectos web modernos, organización de eventos de Minecraft, Roblox y pequeños desarrollos a medida.
+		</p>
+		
+		<div id="hero-btn">
+			<a href="/proyectos" class="btn-apple">Ver Proyectos</a>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.hero-container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 40px 24px;
+		text-align: center;
+	}
+
+	.badge {
+		display: inline-block;
+		background: rgba(168, 85, 247, 0.1);
+		border: 1px solid rgba(168, 85, 247, 0.25);
+		color: #c084fc;
+		padding: 6px 16px;
+		border-radius: 99px;
+		font-size: 10px;
+		letter-spacing: 0.2em;
+		margin-bottom: 32px;
+	}
+
+	h1 {
+		font-size: 64px;
+		font-weight: 300;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+		color: #ffffff;
+		margin-bottom: 24px;
+		opacity: 0; /* Controlado por la animación */
+	}
+
+	.gradient-text {
+		background: linear-gradient(to right, #ffffff 30%, #a855f7 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		font-weight: 500;
+	}
+
+	p {
+		color: var(--text-muted);
+		font-size: 18px;
+		font-weight: 300;
+		line-height: 1.6;
+		max-width: 580px;
+		margin: 0 auto 40px auto;
+		opacity: 0;
+	}
+
+	.btn-apple {
+		display: inline-block;
+		background: #ffffff;
+		color: #000000;
+		text-decoration: none;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		padding: 14px 36px;
+		border-radius: 99px;
+		transition: background-color 0.3s, transform 0.2s;
+		box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+		opacity: 0;
+	}
+
+	.btn-apple:hover {
+		background-color: #e4e4e7;
+		transform: scale(1.03);
+	}
+
+	@media (max-width: 768px) {
+		h1 { font-size: 40px; }
+		p { font-size: 16px; }
+	}
+</style>
+
+<script>
+	import { animate } from "motion";
+
+	function iniciarAnimaciones() {
+		animate("h1", { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, easing: "ease-out" });
+		animate("p", { opacity: [0, 1], y: [20, 0] }, { duration: 0.8, delay: 0.15, easing: "ease-out" });
+		animate(".btn-apple", { opacity: [0, 1], y: [10, 0] }, { duration: 0.6, delay: 0.3 });
+	}
+
+	iniciarAnimaciones();
+	document.addEventListener("astro:after-swap", iniciarAnimaciones);
+</script>

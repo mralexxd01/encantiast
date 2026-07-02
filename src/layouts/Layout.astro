@@ -1,0 +1,356 @@
+---
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+		<ClientRouter />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<!-- Fondos con degradados de luz de neón sutiles -->
+		<div class="blur-glow top-left"></div>
+		<div class="blur-glow bottom-right"></div>
+
+		<!-- HEADER GLOBAL -->
+		<header class="main-header">
+			<a href="/" class="logo">
+				ENCANTIA <span class="accent">STUDIOS</span>
+			</a>
+
+			<nav class="iphone-navbar">
+				<a href="/">Inicio</a>
+				<a href="/proyectos">Proyectos</a>
+				<a href="/contacto">Contacto</a>
+			</nav>
+
+			<div class="spacer"></div>
+		</header>
+
+		<!-- Contenedor del contenido principal -->
+		<div class="page-content">
+			<slot />
+		</div>
+
+		<!-- FOOTER GLOBAL CRISTALINO EXTENDIDO -->
+		<footer class="main-footer">
+			<div class="footer-container">
+				
+				<!-- Bloque Superior: Contenido Extendido -->
+				<div class="footer-top-grid">
+					<div class="footer-brand-section">
+						<span class="footer-brand-title">ENCANTIA<span class="purple-dot">.</span></span>
+						<p class="footer-bio">
+							Dedicados a la creación de landing pages de alto impacto, organización de eventos inmersivos en Minecraft y Roblox, y el desarrollo de ecosistemas digitales que impulsan nuevas ideas. Siempre experimentando, siempre mejorando.
+						</p>
+					</div>
+
+					<div class="footer-links-column">
+						<span class="column-title">Navegación</span>
+						<a href="/">Inicio</a>
+						<a href="/proyectos">Proyectos de Éxito</a>
+						<a href="/contacto">Iniciar un Proyecto</a>
+					</div>
+
+					<div class="footer-links-column">
+						<span class="column-title">Comunidad & Redes</span>
+						<a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link">Instagram <span class="arrow-icon">↗</span></a>
+						<a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="social-link">Discord <span class="arrow-icon">↗</span></a>
+					</div>
+				</div>
+
+				<!-- Bloque Inferior: Copyright -->
+				<div class="footer-bottom">
+					<p class="copyright">&copy; {new Date().getFullYear()} Encantia Studios. Diseñado con obsesión por el rendimiento.</p>
+					<p class="copyright-sub">Todos los derechos reservados.</p>
+				</div>
+
+			</div>
+		</footer>
+	</body>
+</html>
+
+<!-- ESTILOS ENCAPSULADOS PARA EL FOOTER (Evita que se rompa el diseño) -->
+<style>
+	.main-footer {
+		width: 100%;
+		margin-top: auto;
+		padding: 80px 0 40px 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.03);
+		background: linear-gradient(to top, rgba(8, 8, 12, 0.9), transparent);
+		z-index: 10;
+		position: relative;
+	}
+
+	.footer-container {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: 0 24px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.footer-top-grid {
+		display: grid;
+		grid-template-columns: 2fr 1fr 1fr;
+		gap: 60px;
+		padding-bottom: 48px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+		width: 100%;
+	}
+
+	.footer-brand-section {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.footer-brand-title {
+		font-size: 16px;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		color: #ffffff;
+		margin-bottom: 16px;
+	}
+
+	.footer-brand-title .purple-dot {
+		color: #a855f7;
+	}
+
+	.footer-bio {
+		color: #71717a;
+		font-size: 13px;
+		line-height: 1.7;
+		font-weight: 300;
+		max-width: 400px;
+	}
+
+	.footer-links-column {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		align-items: flex-start;
+	}
+
+	.column-title {
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		color: #e4e4e7;
+		font-weight: 500;
+		margin-bottom: 6px;
+	}
+
+	/* Control estricto de colores de enlaces */
+	.footer-links-column a, 
+	.footer-links-column a:link, 
+	.footer-links-column a:visited {
+		color: #a1a1aa !important;
+		text-decoration: none !important;
+		font-size: 13px;
+		font-weight: 300;
+		transition: color 0.3s;
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.footer-links-column a:hover {
+		color: #ffffff !important;
+	}
+
+	.footer-links-column .social-link:hover {
+		color: #a855f7 !important;
+	}
+
+	.arrow-icon {
+		font-size: 10px;
+		color: #52525b;
+		transition: color 0.3s;
+	}
+	
+	.footer-links-column a:hover .arrow-icon {
+		color: inherit;
+	}
+
+	.footer-bottom {
+		padding-top: 32px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+
+	.copyright {
+		color: #52525b;
+		font-size: 12px;
+		font-weight: 300;
+		letter-spacing: 0.02em;
+	}
+
+	.copyright-sub {
+		color: #3f3f46;
+		font-size: 11px;
+		font-weight: 300;
+	}
+
+	@media (max-width: 768px) {
+		.footer-top-grid {
+			grid-template-columns: 1fr;
+			gap: 40px;
+			text-align: center;
+		}
+		.footer-bio {
+			margin: 0 auto;
+		}
+		.footer-links-column {
+			align-items: center;
+		}
+		.footer-bottom {
+			flex-direction: column;
+			gap: 12px;
+			text-align: center;
+			padding-bottom: 80px;
+		}
+	}
+</style>
+
+<!-- ESTILOS GLOBALES DE LA WEB (Fondo, fuentes y header) -->
+<style is:global>
+	:root {
+		--bg-color: #060608;
+		--text-main: #ffffff;
+		--text-muted: #a1a1aa;
+		--accent-color: #a855f7;
+	}
+
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+
+	html, body {
+		background-color: var(--bg-color);
+		color: var(--text-main);
+		font-family: 'Plus_Jakarta_Sans', sans-serif;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		overflow-x: hidden;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.blur-glow {
+		position: fixed;
+		width: 500px;
+		height: 500px;
+		border-radius: 50%;
+		pointer-events: none;
+		z-index: -10;
+		filter: blur(130px);
+		opacity: 0.12;
+	}
+	.top-left {
+		top: -10%;
+		left: 15%;
+		background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+	}
+	.bottom-right {
+		bottom: -10%;
+		right: 15%;
+		background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+	}
+
+	.main-header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
+		padding: 24px 40px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.logo {
+		color: #ffffff;
+		font-weight: 500;
+		text-decoration: none;
+		letter-spacing: 0.25em;
+		font-size: 14px;
+		transition: opacity 0.3s;
+	}
+	.logo .accent {
+		color: var(--accent-color);
+		font-weight: 700;
+	}
+	.logo:hover {
+		opacity: 0.8;
+	}
+
+	.iphone-navbar {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		background: rgba(20, 20, 25, 0.4);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		padding: 10px 28px;
+		border-radius: 99px;
+		display: flex;
+		gap: 28px;
+		box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+	}
+
+	.iphone-navbar a {
+		color: var(--text-muted);
+		text-decoration: none;
+		font-size: 13px;
+		font-weight: 400;
+		letter-spacing: 0.05em;
+		transition: color 0.3s;
+	}
+
+	.iphone-navbar a:hover {
+		color: #ffffff;
+	}
+
+	.spacer {
+		width: 120px;
+	}
+
+	.page-content {
+		padding-top: 140px;
+		flex-grow: 1;
+	}
+
+	@media (max-width: 768px) {
+		.main-header {
+			padding: 20px;
+		}
+		.spacer { display: none; }
+		.iphone-navbar {
+			position: fixed;
+			bottom: 24px;
+			top: auto;
+			left: 50%;
+			width: max-content;
+			z-index: 110;
+		}
+	}
+</style>

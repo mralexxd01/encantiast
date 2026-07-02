@@ -1,0 +1,243 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassCard from '../components/GlassCard.astro';
+import { supabase } from '../lib/supabase';
+
+// 1. Llamada directa a Supabase en el servidor
+const { data: proyectos, error } = await supabase
+	.from('proyectos')
+	.select('link, logo, descripcion_previa, fecha_lanzamiento, titulo')
+	.order('fecha_lanzamiento', { ascending: false }); // Ordenados por los más recientes
+
+if (error) {
+	console.error("Error cargando proyectos de Supabase:", error.message);
+}
+---
+
+<Layout title="Proyectos | Encantia Studios">
+	<main class="proyectos-container">
+		<header class="section-header">
+			<span class="badge">Portfolio</span>
+			<h1>Proyectos <span class="accent">_</span></h1>
+			<p class="subtitle">Explora nuestras últimas producciones digitales y desarrollos a medida.</p>
+		</header>
+
+		<!-- Si hay un error de conexión o está vacío, mostramos un aviso elegante -->
+		{(!proyectos || proyectos.length === 0) && (
+			<div class="empty-state">
+				<GlassCard>
+					<p>No se encontraron proyectos en la base de datos o revisa tus credenciales de Supabase.</p>
+				</GlassCard>
+			</div>
+		)}
+
+		<!-- GRID DE PROYECTOS -->
+		<div class="proyectos-grid">
+			{proyectos && proyectos.map((proyecto) => (
+				<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="proyecto-link card-animate">
+					<GlassCard>
+						<div class="card-header">
+							<!-- Logo (puede ser texto, emoji o etiqueta <img> si es URL) -->
+							<div class="project-logo">
+								{proyecto.logo && proyecto.logo.startsWith('http') ? (
+									<img src={proyecto.logo} alt={proyecto.titulo} />
+								) : (
+									<span>{proyecto.logo || '✦'}</span>
+								)}
+							</div>
+							<span class="project-date">
+								{proyecto.fecha_lanzamiento ? new Date(proyecto.fecha_lanzamiento).toLocaleDateString('es-ES', {year: 'numeric', month: 'short'}) : ''}
+							</span>
+						</div>
+
+						<h2 class="project-title">{proyecto.titulo}</h2>
+						<p class="project-desc">{proyecto.descripcion_previa}</p>
+						
+						<div class="card-footer">
+							<span class="action-text">Visitar sitio</span>
+							<span class="arrow">→</span>
+						</div>
+					</GlassCard>
+				</a>
+			))}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.proyectos-container {
+		max-w: 1000px;
+		margin: 0 auto;
+		padding: 40px 24px;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 60px;
+	}
+
+	.badge {
+		display: inline-block;
+		background: rgba(168, 85, 247, 0.1);
+		border: 1px solid rgba(168, 85, 247, 0.25);
+		color: #c084fc;
+		padding: 6px 16px;
+		border-radius: 99px;
+		font-size: 10px;
+		letter-spacing: 0.2em;
+		margin-bottom: 16px;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		font-size: 48px;
+		font-weight: 300;
+		letter-spacing: -0.01em;
+		color: #ffffff;
+		margin-bottom: 12px;
+	}
+
+	h1 .accent {
+		color: #a855f7;
+	}
+
+	.subtitle {
+		color: var(--text-muted);
+		font-size: 16px;
+		font-weight: 300;
+		max-w: 450px;
+		margin: 0 auto;
+		line-height: 1.5;
+	}
+
+	/* Estructura del Grid */
+	.proyectos-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 100%); /* Fallback */
+		grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+		gap: 24px;
+	}
+
+	.proyecto-link {
+		text-decoration: none;
+		color: inherit;
+		display: block;
+		opacity: 0; /* Controlado por animación */
+	}
+
+	/* Elementos internos del GlassCard */
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 24px;
+	}
+
+	.project-logo {
+		width: 44px;
+		height: 44px;
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 20px;
+	}
+
+	.project-logo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 11px;
+	}
+
+	.project-date {
+		font-size: 11px;
+		color: #71717a;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.project-title {
+		font-size: 22px;
+		font-weight: 400;
+		color: #ffffff;
+		margin-bottom: 10px;
+		transition: color 0.3s;
+	}
+
+	.proyecto-link:hover .project-title {
+		color: #c084fc;
+	}
+
+	.project-desc {
+		font-size: 14px;
+		color: var(--text-muted);
+		line-height: 1.6;
+		font-weight: 300;
+		margin-bottom: 28px;
+		min-h: 68px; /* Mantiene las tarjetas alineadas si un texto es más corto */
+	}
+
+	.card-footer {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		border-top: 1px solid rgba(255, 255, 255, 0.03);
+		padding-top: 16px;
+	}
+
+	.action-text {
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: #71717a;
+		transition: color 0.3s;
+	}
+
+	.proyecto-link:hover .action-text {
+		color: #ffffff;
+	}
+
+	.arrow {
+		font-size: 12px;
+		color: #71717a;
+		transition: transform 0.3s, color 0.3s;
+	}
+
+	.proyecto-link:hover .arrow {
+		transform: translateX(4px);
+		color: #c084fc;
+	}
+
+	.empty-state {
+		text-align: center;
+		max-w: 500px;
+		margin: 40px auto;
+		color: var(--text-muted);
+		font-size: 14px;
+	}
+
+	@media (max-width: 640px) {
+		.proyectos-grid {
+			grid-template-columns: 1fr;
+		}
+		h1 { font-size: 36px; }
+	}
+</style>
+
+<script>
+	import { animate, stagger } from "motion";
+
+	function animarProyectos() {
+		animate(".card-animate", { opacity: [0, 1], y: [30, 0] }, { 
+			delay: stagger(0.1, { start: 0.1 }), 
+			duration: 0.8,
+			easing: "ease-out"
+		});
+	}
+
+	animarProyectos();
+	document.addEventListener("astro:after-swap", animarProyectos);
+</script>
