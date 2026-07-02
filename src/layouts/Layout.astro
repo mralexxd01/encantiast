@@ -3,9 +3,17 @@ import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title: string;
+	description?: string;
+	image?: string;
+	canonicalURL?: string;
 }
 
-const { title } = Astro.props;
+const { 
+	title, 
+	description = "Dedicados a la creación de landing pages de alto impacto, eventos inmersivos en Minecraft y Roblox, y desarrollo de ecosistemas digitales.",
+	image = "/og-image.jpg", // Coloca una imagen de 1200x630px en tu carpeta public/ para las redes sociales
+	canonicalURL = Astro.url.href
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -14,7 +22,28 @@ const { title } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		
+		<!-- SEO Estándar -->
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalURL} />
+		<meta name="robots" content="index, follow" />
+
+		<!-- Open Graph (Facebook, WhatsApp, Discord) -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, Astro.url)} />
+		<meta property="og:site_name" content="Encantia Studios" />
+
+		<!-- Twitter / X -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalURL} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL(image, Astro.url)} />
+
 		<ClientRouter />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,7 +112,7 @@ const { title } = Astro.props;
 	</body>
 </html>
 
-<!-- ESTILOS ENCAPSULADOS PARA EL FOOTER (Evita que se rompa el diseño) -->
+<!-- ESTILOS ENCAPSULADOS PARA EL FOOTER -->
 <style>
 	.main-footer {
 		width: 100%;
@@ -153,7 +182,6 @@ const { title } = Astro.props;
 		margin-bottom: 6px;
 	}
 
-	/* Control estricto de colores de enlaces */
 	.footer-links-column a, 
 	.footer-links-column a:link, 
 	.footer-links-column a:visited {
@@ -227,7 +255,7 @@ const { title } = Astro.props;
 	}
 </style>
 
-<!-- ESTILOS GLOBALES DE LA WEB (Fondo, fuentes y header) -->
+<!-- ESTILOS GLOBALES DE LA WEB -->
 <style is:global>
 	:root {
 		--bg-color: #060608;
@@ -245,7 +273,7 @@ const { title } = Astro.props;
 	html, body {
 		background-color: var(--bg-color);
 		color: var(--text-main);
-		font-family: 'Plus_Jakarta_Sans', sans-serif;
+		font-family: 'Plus Jakarta Sans', sans-serif;
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
