@@ -11,6 +11,7 @@ export default defineConfig({
   // 🚀 CRÍTICO: Cambia el modo de compilación de estático a Servidor Dinámico (SSR)
   // Esto activa las rutas de API dinámicas como /api/submit-application
   output: 'server',
+  adapter: vercel(),
 
   vite: {
     plugins: [tailwindcss()]
