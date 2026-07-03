@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const { data: ajustes } = await supabase
+  .from('ajustes_proyecto')
+  .select('statuspostu, mensaje_status')
+  .single();
+
+const isOpen = ajustes?.statuspostu ?? true;
+const mensajeCierre = ajustes?.mensaje_status ?? "Las postulaciones están pausadas.";
+
+const { data: roles } = await supabase
+  .from('roles_discord')
+  .select('nombre')
+  .order('nombre', { ascending: true });
+---
+
+<Layout title="Formulario de Candidatura | Encantia Studios">
+	<main class="apply-container">
+		{isOpen ? (
+			<header class="section-header">
+				<span class="badge status-open">● Reclutamiento Activo</span>
+				<h1>Solicitar <span class="accent">Puesto</span></h1>
+				<p class="subtitle">Completa tus datos para iniciar el proceso de selección.</p>
+			</header>
+
+			<div class="form-wrapper">
+				<div class="glass-card">
+					<form action="/api/submit-application" method="POST" class="apply-form" data-astro-reload id="postulacion-form">
+						<div class="input-row">
+							<div class="input-group">
+								<label for="nombre">Nombre y Apellidos</label>
+								<input type="text" id="nombre" name="nombre" placeholder="Ej. Alex Tovar Ruiz" required />
+							</div>
+							<div class="input-group">
+								<label for="discord">Usuario de Discord</label>
+								<input type="text" id="discord" name="discord" placeholder="Ej. alex_dev" required />
+							</div>
+						</div>
+
+						<div class="input-row">
+							<div class="input-group">
+								<label for="email">Correo Electrónico</label>
+								<input type="email" id="email" name="email" placeholder="tu@correo.com" required />
+							</div>
+							<div class="input-group">
+								<label for="telefono">Teléfono <span class="optional">(Recomendable)</span></label>
+								<input type="tel" id="telefono" name="telefono" placeholder="Ej. +34 600 000 000" />
+							</div>
+						</div>
+
+						<div class="input-group">
+							<label for="rol">Rol al que deseas postular</label>
+							<select id="rol" name="rol" required>
+								<option value="" disabled selected>Selecciona un puesto disponible...</option>
+								{roles && roles.map((r) => (
+									<option value={r.nombre}>{r.nombre}</option>
+								))}
+							</select>
+						</div>
+
+						<div class="input-group">
+							<label for="motivo">Motivo de tu postulación</label>
+							<textarea id="motivo" name="motivo" rows="5" placeholder="¿Por qué quieres unirte?..." required></textarea>
+						</div>
+
+						<div class="terms-box">
+							<p class="terms-text">
+								<strong>Declaración de Consentimiento:</strong> Al marcar la casilla inferior, confirmo que todos los datos introducidos son verídicos. Acepto que mis datos y el expediente PDF resultante sean almacenados de forma segura en los servidores de Encantia Studios con el único propósito de gestionar esta postulación de conformidad con el RGPD.
+							</p>
+							<div class="checkbox-wrapper">
+								<input type="checkbox" id="acepta_terminos" name="acepta_terminos" value="true" required />
+								<label for="acepta_terminos" class="checkbox-label">He leído y acepto los términos, condiciones y la política de privacidad.</label>
+							</div>
+						</div>
+
+						<div class="signature-box">
+							<label for="firma">Firma Formal del Autor (Escribe tu nombre completo)</label>
+							<input type="text" id="firma" name="firma" class="signature-input" placeholder="Tu Nombre y Apellidos como firma" required />
+							<span id="signature-error" class="signature-error-msg">⚠️ La firma debe ser exactamente idéntica a tu Nombre y Apellidos de arriba.</span>
+							<span class="signature-hint">Tu firma se renderizará automáticamente en formato caligráfico oficial dentro del expediente PDF.</span>
+						</div>
+
+						<button type="submit" id="submit-btn" class="submit-btn">Enviar Postulación Oficial</button>
+					</form>
+				</div>
+			</div>
+		) : (
+			<div class="closed-wrapper">
+				<div class="glass-card">
+					<div class="closed-content">
+						<div class="lock-icon">🔒</div>
+						<span class="badge status-closed">Postulaciones Pausadas</span>
+						<h2>Proceso Cerrado</h2>
+						<p class="closed-message">{mensajeCierre}</p>
+						<a href="/" class="back-btn">Volver al Inicio</a>
+					</div>
+				</div>
+			</div>
+		)}
+	</main>
+</Layout>
+
+<script>
+	const form = document.getElementById('postulacion-form') as HTMLFormElement;
+	const nombreInput = document.getElementById('nombre') as HTMLInputElement;
+	const firmaInput = document.getElementById('firma') as HTMLInputElement;
+	const errorMsg = document.getElementById('signature-error') as HTMLSpanElement;
+	const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+	function validarFirma() {
+		const nombre = nombreInput.value.trim();
+		const firma = firmaInput.value.trim();
+
+		// Si el usuario ya empezó a escribir la firma y no coincide exactamente
+		if (firma && nombre.toLowerCase() !== firma.toLowerCase()) {
+			firmaInput.classList.add('invalid-signature');
+			errorMsg.style.display = 'block';
+			submitBtn.disabled = true;
+			submitBtn.style.opacity = '0.5';
+			submitBtn.style.cursor = 'not-allowed';
+		} else {
+			// Si coincide o está vacío de momento, limpiamos errores
+			firmaInput.classList.remove('invalid-signature');
+			errorMsg.style.display = 'none';
+			submitBtn.disabled = false;
+			submitBtn.style.opacity = '1';
+			submitBtn.style.cursor = 'pointer';
+		}
+	}
+
+	// Escuchar cuando el usuario escribe en cualquiera de los dos campos
+	nombreInput?.addEventListener('input', validarFirma);
+	firmaInput?.addEventListener('input', validarFirma);
+
+	// Validación final preventiva al hacer clic en enviar
+	form?.addEventListener('submit', (e) => {
+		if (nombreInput.value.trim().toLowerCase() !== firmaInput.value.trim().toLowerCase()) {
+			e.preventDefault();
+			alert('La firma digital no coincide exactamente con el Nombre y Apellidos introducidos.');
+		}
+	});
+</script>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Mea+Culpa&display=swap');
+
+	.apply-container { max-width: 750px; margin: 0 auto; padding: 60px 24px; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+	.section-header { text-align: center; margin-bottom: 40px; }
+	.badge { display: inline-block; padding: 6px 16px; border-radius: 99px; font-size: 10px; letter-spacing: 0.15em; margin-bottom: 16px; text-transform: uppercase; font-weight: 600; }
+	.status-open { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.25); color: #4ade80; }
+	.status-closed { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; }
+	h1, h2 { font-size: 40px; font-weight: 300; letter-spacing: -0.01em; color: #ffffff; margin-bottom: 12px; }
+	h1 .accent { background: linear-gradient(to right, #ffffff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+	.subtitle { color: var(--text-muted); font-size: 15px; font-weight: 300; }
+	.glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 32px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); }
+	.apply-form { display: flex; flex-direction: column; gap: 24px; }
+	.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+	.input-group { display: flex; flex-direction: column; gap: 8px; }
+	label { font-size: 11px; font-weight: 600; color: #e4e4e7; letter-spacing: 0.05em; text-transform: uppercase; }
+	label .optional { color: #a1a1aa; font-size: 10px; font-variant: lowercase; font-weight: 400; }
+	input, select, textarea { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px; color: #ffffff; font-size: 14px; font-family: inherit; transition: border-color 0.3s, box-shadow 0.3s; }
+	input:focus, select:focus, textarea:focus { outline: none; border-color: #a855f7; box-shadow: 0 0 12px rgba(168, 85, 247, 0.2); }
+	select option { background: #0c0c12; color: #ffffff; }
+
+	.terms-box { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-top: 5px; }
+	.terms-text { font-size: 11.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 14px; text-align: justify; }
+	.checkbox-wrapper { display: flex; align-items: flex-start; gap: 10px; }
+	.checkbox-wrapper input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; cursor: pointer; accent-color: #a855f7; }
+	.checkbox-label { font-size: 12px; color: #e4e4e7; text-transform: none; font-weight: 400; cursor: pointer; line-height: 1.4; }
+
+	/* ESTILOS DE LA CASILLA DE LA FIRMA */
+	.signature-box { display: flex; flex-direction: column; gap: 8px; position: relative; }
+	.signature-input { font-family: 'Mea Culpa', cursive, sans-serif !important; font-size: 32px !important; color: #a855f7; background: rgba(168, 85, 247, 0.03); border: 1px dashed rgba(168, 85, 247, 0.3); padding: 8px 16px; height: 65px; letter-spacing: 2px; }
+	.signature-input::placeholder { font-family: inherit; font-size: 20px; opacity: 0.4; }
+	
+	/* Estilo de alerta visual roja si la firma no coincide */
+	.invalid-signature { border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.03) !important; color: #f87171 !important; }
+	.signature-error-msg { display: none; color: #f87171; font-size: 11px; font-weight: 500; margin-top: 2px; }
+	
+	.signature-hint { font-size: 11px; color: #64748b; margin-top: -2px; }
+
+	.submit-btn { background: #ffffff; color: #000000; border: none; padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.2s, opacity 0.3s, background 0.3s; margin-top: 10px; }
+	.submit-btn:hover:not(:disabled) { opacity: 0.9; }
+	.submit-btn:active:not(:disabled) { transform: scale(0.98); }
+	.closed-wrapper { max-width: 500px; margin: 0 auto; width: 100%; text-align: center; }
+	.closed-content { padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+	.lock-icon { font-size: 48px; margin-bottom: 8px; filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.4)); }
+	.closed-message { color: var(--text-muted); font-size: 15px; font-weight: 300; line-height: 1.6; max-width: 360px; margin-bottom: 12px; }
+	.back-btn { display: inline-block; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); color: #ffffff; padding: 12px 24px; border-radius: 99px; text-decoration: none; font-size: 13px; font-weight: 500; transition: background 0.3s; }
+	.back-btn:hover { background: rgba(255, 255, 255, 0.1); }
+	@media (max-width: 768px) { .input-row { grid-template-columns: 1fr; gap: 24px; } .glass-card { padding: 24px; } }
+</style>
