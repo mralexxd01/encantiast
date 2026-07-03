@@ -2,7 +2,8 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel/serverless'
+// CHANGE THIS LINE:
+import vercel from '@astrojs/vercel'; 
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,7 +11,6 @@ export default defineConfig({
   site: 'https://encantia.xyz', 
 
   // 🚀 CRÍTICO: Cambia el modo de compilación de estático a Servidor Dinámico (SSR)
-  // Esto activa las rutas de API dinámicas como /api/submit-application
   output: 'server',
   adapter: vercel(),
 
