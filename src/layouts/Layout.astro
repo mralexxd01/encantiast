@@ -17,23 +17,19 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<!-- 1. NAVBAR DISTRIBUIDA -->
 		<header class="navbar-header">
 			<div class="navbar-container">
 				
-				<!-- [IZQUIERDA] Logo -->
 				<a href="/" class="logo">
 					ENCANTIA <span class="logo-accent">STUDIOS</span>
 				</a>
 
-				<!-- [CENTRO] Cápsula de Navegación con Menú Desplegable -->
 				<div class="nav-center-capsule">
 					<nav class="nav-links">
 						<a href="/" class="nav-item">Inicio</a>
 						<a href="/proyectos" class="nav-item">Proyectos</a>
 						<a href="/contacto" class="nav-item">Contacto</a>
 						
-						<!-- Botón Hamburguesa dentro de la cápsula -->
 						<button class="menu-toggle" id="menu-toggle-btn" aria-label="Abrir más secciones">
 							<span class="bar"></span>
 							<span class="bar"></span>
@@ -41,7 +37,6 @@ const { title } = Astro.props;
 						</button>
 					</nav>
 
-					<!-- Menú Desplegable (Dropdown) posicionado debajo de la cápsula -->
 					<div class="dropdown-menu" id="dropdown-menu-container">
 						<span class="dropdown-title">MÁS SECCIONES</span>
 						<div class="dropdown-links">
@@ -55,7 +50,6 @@ const { title } = Astro.props;
 					</div>
 				</div>
 
-				<!-- [DERECHA] Botón de Discord Directo -->
 				<div class="navbar-right">
 					<a href="https://discord.gg/Rx6Hjf5Pks" target="_blank" class="discord-btn">
 						<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" class="discord-logo">
@@ -68,12 +62,10 @@ const { title } = Astro.props;
 			</div>
 		</header>
 
-		<!-- 2. CONTENIDO -->
 		<main class="content-wrapper">
 			<slot />
 		</main>
 
-		<!-- 3. FOOTER -->
 		<footer class="main-footer">
 			<div class="footer-container">
 				<div class="footer-column branding">
@@ -102,11 +94,16 @@ const { title } = Astro.props;
 			</div>
 
 			<div class="footer-bottom">
-				<p>&copy; 2026 Encantia Studios. Todos los derechos reservados.</p>
+				<p>
+					<a href="https://encantia.xyz/">Encantia Studios</a> © 2026 by <a href="https://example.com">Encantia Studios</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="license noopener noreferrer">CC BY-NC-ND 4.0</a>
+					<img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="CC" class="cc-icon">
+					<img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="BY" class="cc-icon">
+					<img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="NC" class="cc-icon">
+					<img src="https://mirrors.creativecommons.org/presskit/icons/nd.svg" alt="ND" class="cc-icon">
+				</p>
 			</div>
 		</footer>
 
-		<!-- JS para abrir el menú desde la cápsula central -->
 		<script>
 			const toggleBtn = document.getElementById('menu-toggle-btn');
 			const dropdownMenu = document.getElementById('dropdown-menu-container');
@@ -126,7 +123,6 @@ const { title } = Astro.props;
 	</body>
 </html>
 
-<!-- 🎨 ESTILOS MAQUETACIÓN EXACTA -->
 <style is:global>
 	@import url('https://fonts.googleapis.com/css2?family=Mea+Culpa&display=swap');
 
@@ -350,8 +346,43 @@ const { title } = Astro.props;
 	.footer-column ul a { color: #64748b; font-size: 13.5px; text-decoration: none; transition: color 0.3s; }
 	.footer-column ul a:hover { color: #ffffff; }
 	.footer-highlight { color: var(--purple-primary) !important; }
-	.footer-bottom { max-width: 1200px; margin: 40px auto 0 auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.02); }
-	.footer-bottom p { font-size: 12px; color: #334155; }
+	
+	.footer-bottom { 
+		max-width: 1200px; 
+		margin: 40px auto 0 auto; 
+		padding-top: 20px; 
+		border-top: 1px solid rgba(255, 255, 255, 0.02); 
+	}
+	.footer-bottom p { 
+		font-size: 12px; 
+		color: #475569; 
+		line-height: 1.8;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 2px;
+	}
+	.footer-bottom a {
+		color: #64748b;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+	.footer-bottom a:hover {
+		color: #ffffff;
+	}
+	
+	/* Estilos para los iconos de Creative Commons */
+	.cc-icon {
+		max-width: 1em;
+		max-height: 1em;
+		margin-left: .2em;
+		vertical-align: middle;
+		filter: opacity(0.5) invert(1); /* Hace que los iconos se adapten al modo oscuro */
+		transition: filter 0.2s;
+	}
+	.footer-bottom p:hover .cc-icon {
+		filter: opacity(0.8) invert(1);
+	}
 
 	/* Responsive */
 	@media (max-width: 900px) {
